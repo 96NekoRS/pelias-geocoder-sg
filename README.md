@@ -1,11 +1,29 @@
-# L's geocoding service
+# Pelias geocoder
 
-Geocoder and reverse geocoder using Pelias
+Get Pelias geocoder up and running quickly with Singapore data
 
-## Deploy
+```bash
+# Start geocoder
+docker-compose up -d
+```
 
-- Build and up elasticsearch: `docker-compose -f docker-compose.es.yml up --build -d`
-- Get IP address of elasticsearch container `docker inspect lpelias_elasticsearch_1 | grep \"IPAddress\"`
-- Set the IP address in pelias docker-compose build args `ES_IP`
-- Build Pelias `docker-compose -f docker-compose.pelias.yml build`
-- Up all containers `docker-compose -f docker-compose.es.yml -f docker-compose.pelias.yml up -d`
+Geocoder is accessible at http://localhost:3100, e.g. http://localhost:3100/v1/search?text=sandcrawler
+
+API docs are available at https://github.com/pelias/pelias-doc
+
+*It is assumed that you have docker and docker compose installed on your machine*
+
+
+### Building from source
+
+Build the libpostal, pelias and elasticsearch images
+
+```bash
+docker build -t chrissng/libpostal -f Dockerfile-libpostal .
+docker-compose build pelias
+docker-compose build elasticsearch
+```
+
+### Data
+
+Data used by the geocode is located in `es/data/`. They are elasticsearch data.

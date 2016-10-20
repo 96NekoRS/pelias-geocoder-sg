@@ -1,6 +1,6 @@
 {
   "esclient": {
-    "apiVersion": "2.x",
+    "apiVersion": "2.4",
     "keepAlive": true,
     "requestTimeout": "300000",
     "hosts": [{
@@ -28,6 +28,8 @@
     "statFrequency": 10000
   },
   "api": {
+    "textParser": "libpostal",
+    "textAnalyzer": "libpostal",
     "accessLog": "common",
     "host": "http://pelias.mapzen.com/",
     "indexName": "pelias",
@@ -54,6 +56,7 @@
   "imports": {
     "geonames": {
       "datapath": "/rawdata/geonames",
+      "countryCode": "SG",
       "adminLookup": false
     },
     "openstreetmap": {

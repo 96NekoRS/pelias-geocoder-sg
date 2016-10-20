@@ -4,22 +4,24 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-elasticsearch
+    container_name: pelias_elasticsearch
     ports:
-      - 9200:9200
-      - 9300:9300
+      - 127.0.0.1:9200:9200
+      - 127.0.0.1:9300:9300
+    restart: always
     volumes:
       - ./es/data:/usr/share/elasticsearch/data
       - ./es/logs:/usr/share/elasticsearch/logs
-      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
   pelias:
     build:
       context: .
       dockerfile: Dockerfile-pelias
-      args:
-        - ES_IP:172.22.0.2
+    container_name: pelias
+    image: chrissng/pelias
     ports:
       - 3100:3100
-    volumes:
-      - ./pelias.json:/pelias/pelias.json
-    links:
-      - "elasticsearch:elasticsearch"
+    restart: always
+    depends_on:
+      - elasticsearch
+    volumes_from:
+      - elasticsearch:ro
