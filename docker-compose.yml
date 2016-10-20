@@ -1,0 +1,25 @@
+version: '2'
+services:
+  elasticsearch:
+    build:
+      context: .
+      dockerfile: Dockerfile-elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./es/data:/usr/share/elasticsearch/data
+      - ./es/logs:/usr/share/elasticsearch/logs
+      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  pelias:
+    build:
+      context: .
+      dockerfile: Dockerfile-pelias
+      args:
+        - ES_IP:172.22.0.2
+    ports:
+      - 3100:3100
+    volumes:
+      - ./pelias.json:/pelias/pelias.json
+    links:
+      - "elasticsearch:elasticsearch"

@@ -1,0 +1,47 @@
+FROM node:4.6
+
+ENV HOME /pelias
+WORKDIR ${HOME}
+
+
+# Download the Pelias repositories
+COPY pull-pelias-repos.sh ${HOME}/pull-pelias-repos.sh
+RUN ./pull-pelias-repos.sh schema api geonames openaddresses openstreetmap
+
+# Download the Singapore OSM extract
+RUN mkdir -p /rawdata/openstreetmap
+RUN wget -P /rawdata/openstreetmap https://s3.amazonaws.com/metro-extracts.mapzen.com/singapore.osm.pbf
+
+# Download the Singapore OpenAddresses
+RUN mkdir -p /rawdata/openaddresses
+RUN wget -P /rawdata/openaddresses http://s3.amazonaws.com/data.openaddresses.io/runs/117831/sg/countrywide.zip
+
+# Download the Singapore GeoNames
+RUN mkdir -p /rawdata/geonames
+RUN wget -P /rawdata/geonames http://download.geonames.org/export/dump/SG.zip
+
+
+# Set the configuration file
+COPY pelias.json ${HOME}/pelias.json
+
+# Set up the Elasticsearch Schema
+WORKDIR ${HOME}/schema
+ARG ES_IP
+RUN echo "$ES_IP elasticsearch" >> /etc/hosts; cat /etc/hosts; node scripts/create_index.js
+
+# Run the importers
+WORKDIR ${HOME}/openaddresses
+RUN echo "$ES_IP elasticsearch" >> /etc/hosts; node import.js
+
+WORKDIR ${HOME}/openstreetmap
+RUN echo "$ES_IP elasticsearch" >> /etc/hosts; npm start
+
+WORKDIR ${HOME}/geonames
+RUN ./bin/pelias-geonames -m
+RUN echo "$ES_IP elasticsearch" >> /etc/hosts; ./bin/pelias-geonames -i sg
+
+
+# Entry point to start Pelias
+COPY entrypoint.sh ${HOME}/entrypoint.sh
+WORKDIR ${HOME}
+ENTRYPOINT ./entrypoint.sh

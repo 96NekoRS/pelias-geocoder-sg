@@ -1,0 +1,72 @@
+{
+  "esclient": {
+    "apiVersion": "2.x",
+    "keepAlive": true,
+    "requestTimeout": "300000",
+    "hosts": [{
+      "env": "development",
+      "protocol": "http",
+      "host": "elasticsearch",
+      "port": 9200
+    }],
+    "log": [{
+      "type": "stdio",
+      "level": [ "error", "warning" ]
+    }]
+  },
+  "elasticsearch": {
+    "settings": {
+      "index": {
+        "number_of_replicas": "0",
+        "number_of_shards": "5",
+        "index_concurrency": "10",
+        "refresh_interval": "1m"
+      }
+    }
+  },
+  "dbclient": {
+    "statFrequency": 10000
+  },
+  "api": {
+    "accessLog": "common",
+    "host": "http://pelias.mapzen.com/",
+    "indexName": "pelias",
+    "version": "1.0"
+  },
+  "schema": {
+    "indexName": "pelias"
+  },
+  "logger": {
+    "level": "debug",
+    "timestamp": true,
+    "colorize": true
+  },
+  "acceptance-tests": {
+    "endpoints": {
+      "local": "http://localhost:3100/v1/",
+      "dev-cached": "http://pelias.dev.mapzen.com.global.prod.fastly.net/v1/",
+      "dev": "http://pelias.dev.mapzen.com/v1/",
+      "prod": "http://search.mapzen.com/v1/",
+      "prod-uncached": "http://pelias.mapzen.com/v1/",
+      "prodbuild": "http://pelias.prodbuild.mapzen.com/v1/"
+    }
+  },
+  "imports": {
+    "geonames": {
+      "datapath": "/rawdata/geonames",
+      "adminLookup": false
+    },
+    "openstreetmap": {
+      "datapath": "/rawdata/openstreetmap",
+      "adminLookup": false,
+      "leveldbpath": "/tmp",
+      "import": [{
+        "filename": "singapore.osm.pbf"
+      }]
+    },
+    "openaddresses": {
+      "datapath": "/rawdata/openaddresses",
+      "adminLookup": false
+    }
+  }
+}

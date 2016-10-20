@@ -1,0 +1,14 @@
+version: '2'
+services:
+  elasticsearch:
+    build:
+      context: .
+      dockerfile: Dockerfile-elasticsearch
+    network_mode: "bridge"
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./es/data:/usr/share/elasticsearch/data
+      - ./es/logs:/usr/share/elasticsearch/logs
+      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
