@@ -19,7 +19,7 @@ RUN mkdir -p ./openstreetmap \
 # Download the Singapore OpenAddresses
 RUN mkdir -p ./openaddresses \
   && wget -P ./openaddresses $(curl -s http://results.openaddresses.io/?runs=all#runs | grep '/de/nw/statewide.zip' | grep -Po '(?<=href=")[^"]*(?=")') \
-  && unzip -d ./openaddresses ./openaddresses/countrywide.zip
+  && unzip -d ./openaddresses ./openaddresses/statewide.zip
 
 # Download the Singapore GeoNames
 RUN mkdir -p ./geonames \
