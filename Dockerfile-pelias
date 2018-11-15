@@ -14,16 +14,16 @@ WORKDIR /rawdata
 
 # Download the Singapore OSM extract
 RUN mkdir -p ./openstreetmap \
-  && wget -P ./openstreetmap https://s3.amazonaws.com/metro-extracts.mapzen.com/singapore.osm.pbf
+  && wget -P ./openstreetmap http://download.geofabrik.de/europe/germany/baden-wuerttemberg-latest.osm.pbf
 
 # Download the Singapore OpenAddresses
 RUN mkdir -p ./openaddresses \
-  && wget -P ./openaddresses $(curl -s http://results.openaddresses.io/?runs=all#runs | grep '/sg/countrywide.zip' | grep -Po '(?<=href=")[^"]*(?=")') \
+  && wget -P ./openaddresses $(curl -s http://results.openaddresses.io/?runs=all#runs | grep '/de/nw/statewide.zip' | grep -Po '(?<=href=")[^"]*(?=")') \
   && unzip -d ./openaddresses ./openaddresses/countrywide.zip
 
 # Download the Singapore GeoNames
 RUN mkdir -p ./geonames \
-  && wget -P ./geonames http://download.geonames.org/export/dump/SG.zip
+  && wget -P ./geonames http://download.geonames.org/export/dump/DE.zip
 
 # Set the configuration file
 COPY pelias.json ${HOME}/pelias.json
